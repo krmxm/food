@@ -45,48 +45,57 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // Timer
 
-    // 1 функция, которая будет устанавливать таймер на страницу
-    // 2 функция, которая будет устанавливать разницу
+    // const deadline
+    // 1 функция, которая будет устанавливать разницу
+    // 2 функция, которая будет устанавливать таймер на страницу
     // 3 функция, которая будет заниматься обновлением таймера
 
     const deadline = '2023-03-20';
 
-    function getTimeRemaining(endtime) {
-        const t = Date.parse(endtime) - Date.parse(new Date()),
-            days = Math.floor( (t/(1000*60*60*24)) ),
-            seconds = Math.floor( (t/1000) % 60 ),
-            minutes = Math.floor( (t/1000/60) % 60 ),
-            hours = Math.floor( (t/(1000*60*60) % 24) );
+    function getTimeRemaining (endtime) {
+        let days, hours, minutes, seconds;
+        const t = Date.parse(endtime) - Date.parse(new Date());
+
+        if (t <= 0) {
+            days = 0;
+            hours = 0;
+            minutes = 0;
+            seconds = 0;
+        } else {
+            days = Math.floor(t / (1000 * 60 * 60 * 24) );
+            hours = Math.floor(t / (1000 * 60 * 60) % 24);
+            minutes = Math.floor((t / (1000 * 60)) % 60);
+            seconds = Math.floor( (t / 1000) % 60 );
+        }
 
         return {
             'total': t,
-            'days': days,
-            'hours': hours,
-            'minutes': minutes,
-            'seconds': seconds
+            days,
+            hours,
+            minutes,
+            seconds
         };
     }
 
-    function getZero(num) {
-        if (num >= 0 && num < 10) {
-            return `0${num}`;
+    function getZero(num){
+        if(num >= 0 && num < 10) {
+            return '0' + num;
         } else {
             return num;
         }
     }
 
-    function setClock(selector, endtime) {
-
+    function setTime (selector, endtime) {
         const timer = document.querySelector(selector),
-            days = timer.querySelector("#days"),
-            hours = timer.querySelector('#hours'),
-            minutes = timer.querySelector('#minutes'),
-            seconds = timer.querySelector('#seconds'),
-            timeInterval = setInterval(updateClock, 1000);
+              days = timer.querySelector("#days"),
+              hours = timer.querySelector("#hours"),
+              minutes = timer.querySelector("#minutes"),
+              seconds = timer.querySelector("#seconds"),
+              timeInterval = setInterval(updateClock, 1000);
 
-        updateClock();
+        updateClock ();
 
-        function updateClock() {
+        function updateClock () {
             const t = getTimeRemaining(endtime);
 
             days.innerHTML = getZero(t.days);
@@ -99,5 +108,6 @@ window.addEventListener('DOMContentLoaded', () => {
             }
         }
     }
-    setClock('.timer', deadline);
+
+    setTime ('.timer', deadline);
 });
