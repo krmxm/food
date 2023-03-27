@@ -2,15 +2,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     // tabs
 
-    const tabsParent = document.querySelector('.tabheader__items'),
-          tabs = document.querySelectorAll('.tabheader__item'),
+    const tabsParents = document.querySelector('.tabheader__items'),
+          tabs = tabsParents.querySelectorAll('.tabheader__item'),
           tabsContent = document.querySelectorAll('.tabcontent');
 
     function hideTabContent() {
         tabsContent.forEach(item => {
-            item.classList.add('hide');
             item.classList.remove('show', 'fade');
-
+            item.classList.add('hide');
         });
 
         tabs.forEach(item => {
@@ -22,18 +21,16 @@ window.addEventListener('DOMContentLoaded', () => {
         tabsContent[i].classList.add('show', 'fade');
         tabsContent[i].classList.remove('hide');
 
-
         tabs[i].classList.add('tabheader__item_active');
-
     }
 
     hideTabContent();
     showTabContent();
 
-    tabsParent.addEventListener('click', (e) => {
+    tabsParents.addEventListener('click', (e) => {
         const target = e.target;
 
-        if (target && target.classList.contains('tabheader__item')) {
+        if(target && target.classList.contains('tabheader__item')) {
             tabs.forEach((item, i) => {
                 if (target == item) {
                     hideTabContent();
@@ -46,30 +43,32 @@ window.addEventListener('DOMContentLoaded', () => {
     // Timer
 
     // const deadline
-    // 1 функция, которая будет устанавливать разницу
-    // 2 функция, которая будет устанавливать таймер на страницу
-    // 3 функция, которая будет заниматься обновлением таймера
+    // 1 функция, которая будет устанавливать разницу getTimeRemaining
+    // 2 функция, которая будет устанавливать таймер на страницу setTime
+    // 3 функция, которая будет заниматься обновлением таймера updateClock
 
+    
     const deadline = '2023-03-20';
 
-    function getTimeRemaining (endtime) {
+    function getTimeRemaining(endtime) {
         let days, hours, minutes, seconds;
-        const t = Date.parse(endtime) - Date.parse(new Date());
 
-        if (t <= 0) {
+        const t = Date.parse(endtime) - Date.parse(new Date());
+        
+        if(t <= 0) {
             days = 0;
             hours = 0;
             minutes = 0;
             seconds = 0;
         } else {
-            days = Math.floor(t / (1000 * 60 * 60 * 24) );
-            hours = Math.floor(t / (1000 * 60 * 60) % 24);
+            days = Math.floor(t / (1000 * 60 * 60 * 24));
+            hours = Math.floor((t / (1000 * 60 * 60)) % 24);
             minutes = Math.floor((t / (1000 * 60)) % 60);
-            seconds = Math.floor( (t / 1000) % 60 );
+            seconds = Math.floor((t / 1000) % 60);
         }
 
         return {
-            'total': t,
+            total: t,
             days,
             hours,
             minutes,
@@ -77,39 +76,37 @@ window.addEventListener('DOMContentLoaded', () => {
         };
     }
 
-    function getZero(num){
-        if(num >= 0 && num < 10) {
+    function zero(num) {
+        if(num > 0 && num <= 10) {
             return '0' + num;
         } else {
             return num;
         }
     }
 
-    function setTime (selector, endtime) {
+    function setTime(selector, endtime) {
         const timer = document.querySelector(selector),
-              days = timer.querySelector("#days"),
-              hours = timer.querySelector("#hours"),
-              minutes = timer.querySelector("#minutes"),
-              seconds = timer.querySelector("#seconds"),
+              days = timer.querySelector('#days'),
+              hours = timer.querySelector('#hours'),
+              minutes = timer.querySelector('#minutes'),
+              seconds = timer.querySelector('#seconds'),
               timeInterval = setInterval(updateClock, 1000);
 
-        updateClock ();
-
-        function updateClock () {
+        function updateClock() {
             const t = getTimeRemaining(endtime);
 
-            days.innerHTML = getZero(t.days);
-            hours.innerHTML = getZero(t.hours);
-            minutes.innerHTML = getZero(t.minutes);
-            seconds.innerHTML = getZero(t.seconds);
+            days.innerHTML = zero(t.days);
+            hours.innerHTML = zero(t.hours);
+            minutes.innerHTML = zero(t.minutes);
+            seconds.innerHTML = zero(t.seconds);
 
-            if (t.total <= 0) {
+            if(t.total <= 0) {
                 clearInterval(timeInterval);
             }
         }
     }
 
-    setTime ('.timer', deadline);
+    setTime('.timer', deadline)
 
     // Modal
 
@@ -119,11 +116,11 @@ window.addEventListener('DOMContentLoaded', () => {
 
     modalTrigger.forEach(btn => {
         btn.addEventListener('click', openModal);
+        
     });
 
     function openModal() {
         modal.style.display = 'block';
-        // можно через classList и toggle
         document.body.style.overflow = 'hidden';
         clearInterval(modalTimerId);
     }
@@ -136,23 +133,23 @@ window.addEventListener('DOMContentLoaded', () => {
     modalCloseBtn.addEventListener('click', closeModal);
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
+        if (e.target === modal) { // закрытие окна кликом на тёмную область
             closeModal();
         }
     });
 
     document.addEventListener('keydown', (e) => {
-        if (e.code === "Escape" && modal.style.display == 'block') { 
-            closeModal();
+        if (e.code === "Escape") { // закрытие окна по клику клавиши, метод event
+            closeModal(); 
         }
     });
 
-    // const modalTimerId = setTimeout(openModal, 3000);
+    const modalTimerId = setTimeout(openModal, 5000);
 
     function showModalByScroll() {
-        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight - 1) {
+        if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight -1){
             openModal();
-            window.removeEventListener('scroll', showModalByScroll);
+            window.removeEventListener('scroll', showModalByScroll); // модальное окно один раз
         }
     }
 
@@ -231,5 +228,45 @@ window.addEventListener('DOMContentLoaded', () => {
         '.menu .container',
         'menu__item',
     ).render();
+    
+    // Forms
+    // используем объект XMLHttpRequest, будем отправлять данные в двух разных форматах
+
+    const forms = document.querySelectorAll('form');
+
+    const message = {
+        loading: 'Загрузка',
+        success: 'Спасибо! Скоро мы с вами свяжемся',
+        failure: 'Что-то пошло не так...'
+    };
+
+    function postData(form) {
+        form.addEventListener('submit', (e) => { // навешивает обработчик события на форму, submit срабатывает, когда мы пытаемся отправить какую-то форму, клацаем на кнопку или нажимаем Enter
+            e.preventDefault(); // отменяем стандартное поведение браузера, именно эта команда должна идти в AJAX запросах
+
+            const statusMessage = document.createElement('div');
+            statusMessage.classList.add('status');
+            statusMessage.textContent = message.loading;
+            form.append(statusMessage);
+
+            const request = new XMLHttpRequest();
+            request.open('POST', 'server.php'); // вначале всегда вызывается метод open, чтобы настроить этот запрос
+
+            request.setRequestHeader('Content-type', 'multipart/form-data'); // заголовок для формы
+            const formData = new FormData(form); // самый просто способ подготовить данные из формы для отправки (не JSON)
+
+            // formData - специальный объект, который позволяет с определённой формы быстро сформироовать все данные, которые заполнил пользователь, формирует ключ-значение
+
+            // в html у форм всегда должен быть атрибут name
+
+            request.send(formData); // отправляем formDate
+
+            request.addEventListener('Load', () => { // остлеживаем load, конечную загурзку наешго запросы
+                if (request.status === 200) {
+                    console.log(request.response);
+                    statusMessage.textContent = message.success;
+                }
+            });
+        });
+    }
 });
- 
