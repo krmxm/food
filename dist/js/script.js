@@ -233,7 +233,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const forms = document.querySelectorAll('form');
 
     const message = {
-        loading: 'Загрузка',
+        loading: 'img/form/spinner.svg',
         success: 'Спасибо! Скоро мы с вами свяжемся',
         failure: 'Что-то пошло не так...'
     };
@@ -248,10 +248,14 @@ window.addEventListener('DOMContentLoaded', () => {
             e.preventDefault();
             // отменяем стандартное поведение браузера, именно эта команда первая должна идти в AJAX запросах
 
-            const statusMessage = document.createElement('div');
-            statusMessage.classList.add('status');
-            statusMessage.textContent = message.loading;
-            form.append(statusMessage);
+            const statusMessage = document.createElement('img');
+            statusMessage.src = message.loading;
+            statusMessage.style.cssText = `
+                display: block;
+                margin: 0 auto;
+            `;
+            // form.append(statusMessage);
+            form.insertAdjacentElement('afterend', statusMessage);
 
             const request = new XMLHttpRequest();
             request.open('POST', 'server.php');
@@ -296,7 +300,7 @@ window.addEventListener('DOMContentLoaded', () => {
     function showThanksModal(message) {
         const prevModalDialog = document.querySelector('.modal__dialog');
 
-        prevModalDialog.style.display = 'none';
+        document.querySelector('.modal__dialog').classList.add('hide');
         openModal(); // ???
 
         const thanksModal = document.createElement('div');
@@ -311,8 +315,8 @@ window.addEventListener('DOMContentLoaded', () => {
         document.querySelector('.modal').append(thanksModal);
         setTimeout(() => {
             thanksModal.remove();
-            prevModalDialog.classList.add('show');
-            prevModalDialog.classList.remove('hide');
+            document.querySelector('.modal__dialog').classList.add('show');
+            document.querySelector('.modal__dialog').classList.remove('hide');
             closeModal(); // ???
         }, 4000);
     }
