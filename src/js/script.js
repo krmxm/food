@@ -144,7 +144,8 @@ window.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    const modalTimerId = setTimeout(openModal, 5000);
+    const modalTimerId = setTimeout(openModal, 300000);
+    // Изменил значение, чтобы не отвлекало
 
     function showModalByScroll() {
         if (window.pageYOffset + document.documentElement.clientHeight >= document.documentElement.scrollHeight -1){
@@ -240,9 +241,15 @@ window.addEventListener('DOMContentLoaded', () => {
         failure: 'Что-то пошло не так...'
     };
 
+    forms.forEach(item => { // подвязываем на каждую форму функцию postData
+        postData(item);
+    });
+
     function postData(form) {
-        form.addEventListener('submit', (e) => { // навешивает обработчик события на форму, submit срабатывает, когда мы пытаемся отправить какую-то форму, клацаем на кнопку или нажимаем Enter
-            e.preventDefault(); // отменяем стандартное поведение браузера, именно эта команда должна идти в AJAX запросах
+        form.addEventListener('submit', (e) => { 
+        // навешивает обработчик события на форму, submit срабатывает, когда мы пытаемся отправить какую-то форму, клацаем на кнопку или нажимаем Enter
+            e.preventDefault();
+            // отменяем стандартное поведение браузера, именно эта команда первая должна идти в AJAX запросах
 
             const statusMessage = document.createElement('div');
             statusMessage.classList.add('status');
@@ -250,21 +257,42 @@ window.addEventListener('DOMContentLoaded', () => {
             form.append(statusMessage);
 
             const request = new XMLHttpRequest();
-            request.open('POST', 'server.php'); // вначале всегда вызывается метод open, чтобы настроить этот запрос
+            request.open('POST', 'server.php');
+            // вначале всегда вызывается метод open, чтобы настроить этот запрос
 
-            request.setRequestHeader('Content-type', 'multipart/form-data'); // заголовок для формы
-            const formData = new FormData(form); // самый просто способ подготовить данные из формы для отправки (не JSON)
+            /* request.setRequestHeader('Content-type', 'multipart/form-data'); 
+            // заголовок для формы (когда мы используем связку XMLHttpRequest + FormData нам устанавливать заголовок не нужно, он установится автоматически) */
+
+            request.setRequestHeader('Content-type', 'application/json'); // для JSON нужен заголовок
+
+            const formData = new FormData(form);
+            // самый просто способ подготовить данные из формы для отправки (не JSON)
 
             // formData - специальный объект, который позволяет с определённой формы быстро сформироовать все данные, которые заполнил пользователь, формирует ключ-значение
 
             // в html у форм всегда должен быть атрибут name
 
-            request.send(formData); // отправляем formDate
+            const object = {};
+            formData.forEach(function(value, key) {
+               object[key] = value; 
+            }); // на основании значений в formData сформируем object, с которым мы можем использовать конвертацию JSON
 
-            request.addEventListener('Load', () => { // остлеживаем load, конечную загурзку наешго запросы
+            const json = JSON.stringify(object); // превращаем в формат json
+
+            /* request.send(formData); // отправляем formDate */
+            request.send(json); // отправляем json
+
+            request.addEventListener('load', () => {
+            // остлеживаем load, конечную загурзку наешго запросы
                 if (request.status === 200) {
                     console.log(request.response);
                     statusMessage.textContent = message.success;
+                    form.reset(); // сбрасываем форму после успешной отправки
+                    setTimeout(() => {
+                        statusMessage.remove(); // сдаляет сообщение
+                    }, 2000);
+                } else {
+                    statusMessage.textContent = message.failure;
                 }
             });
         });
