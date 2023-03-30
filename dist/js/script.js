@@ -130,7 +130,7 @@ window.addEventListener('DOMContentLoaded', () => {
     }
 
     modal.addEventListener('click', (e) => {
-        if (e.target === modal || e.target.getAttribute('data-close') == '') { // закрытие окна кликом на тёмную область
+        if (e.target === modal || e.target.getAttribute('data-close') == '') { // закрытие окна кликом на тёмную область или на крестик
             closeModal();
         }
     });
@@ -244,7 +244,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     function postData(form) {
         form.addEventListener('submit', (e) => { 
-        // навешивает обработчик события на форму, submit срабатывает, когда мы пытаемся отправить какую-то форму, клацаем на кнопку или нажимаем Enter
+        // навешивает обработчик события на форму, submit срабатывает, когда мы пытаемся отправить какую-то форму, клацаем на кнопку или нажимаем Enter, prevent - предотвращать
             e.preventDefault();
             // отменяем стандартное поведение браузера, именно эта команда первая должна идти в AJAX запросах
 
@@ -258,6 +258,7 @@ window.addEventListener('DOMContentLoaded', () => {
             form.insertAdjacentElement('afterend', statusMessage);
 
             const request = new XMLHttpRequest();
+            // XMLHttpRequest это API, который предоставляет клиенту функциональность для обмена данными между клиентом и сервером. Данный API предоставляет простой способ получения данных по ссылке без перезагрузки страницы. Это позволяет обновлять только часть веб-страницы не прерывая пользователя. XMLHttpRequest используется в AJAX запросах и особенно в single-page приложениях.
             request.open('POST', 'server.php');
             // вначале всегда вызывается метод open, чтобы настроить этот запрос
 
@@ -267,7 +268,7 @@ window.addEventListener('DOMContentLoaded', () => {
             request.setRequestHeader('Content-type', 'application/json'); // для JSON нужен заголовок
 
             const formData = new FormData(form);
-            // самый просто способ подготовить данные из формы для отправки (не JSON)
+            // самый просто способ подготовить данные из формы для отправки (не JSON), аргумент - форма, из которой над нужно собрать данные
 
             // formData - специальный объект, который позволяет с определённой формы быстро сформироовать все данные, которые заполнил пользователь, формирует ключ-значение
 
@@ -289,7 +290,7 @@ window.addEventListener('DOMContentLoaded', () => {
                     console.log(request.response);
                     showThanksModal(message.success);
                     form.reset(); // сбрасываем форму после успешной отправки
-                    statusMessage.remove(); // сдаляет сообщение
+                    statusMessage.remove(); // удаляет сообщение
                 } else {
                     showThanksModal(message.failure);
                 }
@@ -320,4 +321,14 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal(); // ???
         }, 4000);
     }
+
+    fetch('https://jsonplaceholder.typicode.com/posts', {
+        method: "POST",
+        body: JSON.stringify({name: 'Alex'}),
+        headers: {
+            'Content-type': 'application/json'
+        }
+    })
+      .then(response => response.json())
+      .then(json => console.log(json));
 });
