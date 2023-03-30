@@ -257,15 +257,12 @@ window.addEventListener('DOMContentLoaded', () => {
             // form.append(statusMessage);
             form.insertAdjacentElement('afterend', statusMessage);
 
-            const request = new XMLHttpRequest();
-            // XMLHttpRequest это API, который предоставляет клиенту функциональность для обмена данными между клиентом и сервером. Данный API предоставляет простой способ получения данных по ссылке без перезагрузки страницы. Это позволяет обновлять только часть веб-страницы не прерывая пользователя. XMLHttpRequest используется в AJAX запросах и особенно в single-page приложениях.
-            request.open('POST', 'server.php');
-            // вначале всегда вызывается метод open, чтобы настроить этот запрос
+
 
             /* request.setRequestHeader('Content-type', 'multipart/form-data'); 
             // заголовок для формы (когда мы используем связку XMLHttpRequest + FormData нам устанавливать заголовок не нужно, он установится автоматически) */
 
-            request.setRequestHeader('Content-type', 'application/json'); // для JSON нужен заголовок
+            // request.setRequestHeader('Content-type', 'application/json'); // для JSON нужен заголовок
 
             const formData = new FormData(form);
             // самый просто способ подготовить данные из формы для отправки (не JSON), аргумент - форма, из которой над нужно собрать данные
@@ -279,21 +276,22 @@ window.addEventListener('DOMContentLoaded', () => {
                object[key] = value; 
             }); // на основании значений в formData сформируем object, с которым мы можем использовать конвертацию JSON
 
-            const json = JSON.stringify(object); // превращаем в формат json
-
-            /* request.send(formData); // отправляем formDate */
-            request.send(json); // отправляем json
-
-            request.addEventListener('load', () => {
-            // остлеживаем load, конечную загурзку нашего запросы
-                if (request.status === 200) {
-                    console.log(request.response);
+            fetch('server.php', {
+                method: "POST",
+                headers: {
+                    'Content-type': 'application/json'
+                },
+                body: JSON.stringify(object)
+            })
+            .then(data => data.text())
+            .then(data => {
+                console.log(data);
                     showThanksModal(message.success);
-                    form.reset(); // сбрасываем форму после успешной отправки
                     statusMessage.remove(); // удаляет сообщение
-                } else {
-                    showThanksModal(message.failure);
-                }
+            }).catch(() => {
+                showThanksModal(message.failure);
+            }).finally(() => {
+                form.reset(); // сбрасываем форму после успешной отправки
             });
         });
     }
@@ -321,14 +319,4 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal(); // ???
         }, 4000);
     }
-
-    fetch('https://jsonplaceholder.typicode.com/posts', {
-        method: "POST",
-        body: JSON.stringify({name: 'Alex'}),
-        headers: {
-            'Content-type': 'application/json'
-        }
-    })
-      .then(response => response.json())
-      .then(json => console.log(json));
 });
