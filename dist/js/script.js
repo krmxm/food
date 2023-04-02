@@ -319,4 +319,8 @@ window.addEventListener('DOMContentLoaded', () => {
             closeModal(); // ???
         }, 4000);
     }
+
+    fetch('db.json')
+        .then(data => data.json()) // превращаем json в обычный объект
+        .then(res => console.log(res));
 });
