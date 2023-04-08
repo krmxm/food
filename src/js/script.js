@@ -391,10 +391,10 @@ window.addEventListener('DOMContentLoaded', () => {
     });
 
     prev.addEventListener('click', () => {
-        if (offset == 0){ //'500px' ??? 
+        if (offset == 0){
             offset = +width.slice(0, width.length - 2) * (slides.length - 1);
         } else {
-            offset -= +width.slice(0, width.length - 2); // ???
+            offset -= +width.slice(0, width.length - 2);
         }
 
         slidesField.style.transform = `translateX(-${offset}px)`;
