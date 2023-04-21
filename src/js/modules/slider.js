@@ -198,4 +198,4 @@ function slider() {
     // оборачиваем слайды в обёртку, чтобы главная обёртка была как окошко, в которой мы можем видеть текущий слайд
 }
 
-module.exports = slider;
+export default slider;

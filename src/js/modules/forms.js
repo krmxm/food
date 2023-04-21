@@ -1,3 +1,5 @@
+import {closeModal, openModal} from './modal';
+
 function forms() {
     // Forms
     // используем объект XMLHttpRequest, будем отправлять данные в двух разных форматах
@@ -95,4 +97,4 @@ function forms() {
     }
 }
 
-module.exports = forms;
+export default forms;
