@@ -1,13 +1,10 @@
-function timer() {
+function timer(id, deadline) {
     // Timer
 
     // const deadline
     // 1 функция, которая будет устанавливать разницу getTimeRemaining
     // 2 функция, которая будет устанавливать таймер на страницу setTime
     // 3 функция, которая будет заниматься обновлением таймера updateClock
-
-
-    const deadline = '2023-05-20';
 
     function getTimeRemaining(endtime) {
     let days, hours, minutes, seconds;
@@ -65,7 +62,7 @@ function timer() {
     }
     }
 
-    setTime('.timer', deadline);
+    setTime(id, deadline);
 }
 
 export default timer;

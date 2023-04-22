@@ -1,10 +1,11 @@
 import {closeModal, openModal} from './modal';
+import {postData} from '../services/services';
 
-function forms() {
+function forms(formSelector, modalTimerId) {
     // Forms
     // используем объект XMLHttpRequest, будем отправлять данные в двух разных форматах
 
-    const forms = document.querySelectorAll('form');
+    const forms = document.querySelectorAll(formSelector);
 
     const message = {
         loading: 'img/form/spinner.svg',
@@ -15,18 +16,6 @@ function forms() {
     forms.forEach(item => { // подвязываем на каждую форму функцию postData
         bindPpostData(item);
     });
-
-    const postData = async (url, data) => {
-        const res = await fetch(url, {
-            method: "POST",
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: data
-        });
-
-        return await res.json();
-    };
 
     function bindPpostData(form) {
         form.addEventListener('submit', (e) => { 
@@ -76,7 +65,7 @@ function forms() {
         const prevModalDialog = document.querySelector('.modal__dialog');
 
         document.querySelector('.modal__dialog').classList.add('hide');
-        openModal(); // ???
+        openModal('.modal', modalTimerId);
 
         const thanksModal = document.createElement('div');
         thanksModal.classList.add('modal__dialog');
@@ -92,7 +81,7 @@ function forms() {
             thanksModal.remove();
             document.querySelector('.modal__dialog').classList.add('show');
             document.querySelector('.modal__dialog').classList.remove('hide');
-            closeModal(); // ???
+            closeModal('.modal');
         }, 4000);
     }
 }

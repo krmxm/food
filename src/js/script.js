@@ -5,16 +5,27 @@ import modal from './modules/modal';
 import slider from './modules/slider';
 import timer from './modules/timer';
 import cards from './modules/cards';
+import {openModal} from './modules/modal';
 
 window.addEventListener('DOMContentLoaded', () => {
-         
+    
+    const modalTimerId = setTimeout(() => openModal('.modal', modalTimerId), 300000);
 
-    tabs();
+    tabs('.tabheader__item', '.tabcontent', '.tabheader__items', 'tabheader__item_active');
     calc();
-    forms();
-    modal('[data-modal]', '.modal');
-    slider();
-    timer();
+    forms('form', modalTimerId);
+    modal('[data-modal]', '.modal', modalTimerId);
+    slider({
+        container: '.offer__slider',
+        nextArrow: '.offer__slider-next',
+        prevArrow: '.offer__slider-prev',
+        slide: '.offer__slide',
+        totalCounter: '#total',
+        currentCounter: '#current',
+        wrapper: '.offer__slider-wrapper',
+        field: '.offer__slider-inner'
+    });
+    timer('.timer', '2023-05-20');
     cards();
 });
 
