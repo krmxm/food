@@ -16,14 +16,14 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.m?js$/,
+        test: /\.m?js$/, // мы находим наши js файлы (регулярное выражение)
         exclude: /(node_modules|bower_components)/,
         use: {
           loader: 'babel-loader',
           options: {
             presets: [['@babel/preset-env', {
                 debug: true,
-                corejs: 3,
+                // corejs: 3,
                 useBuiltIns: "usage"
             }]]
           }
