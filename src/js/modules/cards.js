@@ -1,4 +1,4 @@
-import {getResource} from '../services/services';
+import axios from 'axios';
 
 function cards() {
     // Используем классы для карточек
@@ -68,15 +68,18 @@ function cards() {
     //                 <div class="menu__item-cost">Цена:</div>
     //                 <div class="menu__item-total"><span>${price}</span> грн/день</div>
     //             </div>
-    //         `;
+    //         `;а
     //     });
 
-    axios.get('http://localhost:3000/menu')
-        .then(data => {
-            data.data.forEach(({img, altimg, title, descr, price}) => {
-                new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
-            });
+    axios.get('../db.json')
+    .then(response => {
+        const menuItems = response.data.menu;
+
+        menuItems.forEach(({ img, altimg, title, descr, price }) => {
+            new MenuCard(img, altimg, title, descr, price, '.menu .container').render();
         });
+    })
+    .catch(error => console.error('Error fetching data:', error));
 }
 
 export default cards;

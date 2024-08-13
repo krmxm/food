@@ -6,7 +6,7 @@ const postData = async (url, data) => {
             },
             body: data
     });
-
+ь 
     return await res.json();
 };
 

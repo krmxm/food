@@ -48,15 +48,9 @@ function timer(id, deadline) {
               seconds = timer.querySelector('#seconds'),
               timeInterval = setInterval(updateClock, 1000);
 
-<<<<<<< HEAD
+
         function updateClock() {
             const t = getTimeRemaining(endtime);
-=======
-    function updateClock() {
-        console.log('Обновление таймера...');
-
-        const t = getTimeRemaining(endtime);
->>>>>>> 8860f8873ba3c045229ae38ba21447d288829a92
 
             days.innerHTML = zero(t.days);
             hours.innerHTML = zero(t.hours);
